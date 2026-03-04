@@ -1,0 +1,61 @@
+# Run these commands in your terminal one by one:
+
+# 1. Install the new package (tsx)
+npm install
+
+# 2. Run the setup script to create your test users
+npm run setup
+
+# 3. Start the development server
+npm run dev
+
+# Then open your browser to: http://localhost:3000
+
+# ============================================
+# YOUR TEST LOGIN CREDENTIALS
+# ============================================
+
+ADMIN LOGIN (Your Uncle's View):
+Email: davidsamzzywilliams1234@gmail.com
+Password: admin123
+
+STAFF LOGIN 1:
+Email: ogunyemisamueloghenemano2323@gmail.com
+Password: password123
+
+STAFF LOGIN 2:
+Email: unpausesoftwaredeveloper@gmail.com
+Password: password456
+
+STAFF LOGIN 3:
+Email: ogunyemi.samuel.tech@gmail.com
+Password: password789
+
+# ============================================
+# WHAT TO TEST
+# ============================================
+
+1. Login as STAFF (use any of the 3 staff emails)
+   - Upload a test photo (use camera or file)
+   - Tag it as "Front" or "Back"
+   - See if it appears in your profile
+
+2. Logout and login as ADMIN
+   - See all 3 staff members
+   - Check if you can see their uploaded photos
+   - Test the search and filter
+
+3. Try on your phone too!
+   - Open http://localhost:3000 on your phone (if on same WiFi)
+   - Test camera upload
+   - See if it's responsive
+
+# ============================================
+# AFTER TESTING
+# ============================================
+
+Once you're happy with how it looks and works:
+- We can clean up the test data
+- Add your uncle's real email
+- Add real staff emails
+- Deploy to Vercel (so everyone can access from anywhere)

@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-blue: #1e40af;
+  --primary-red: #dc2626;
+}
+
+body {
+  @apply bg-gray-50;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary-blue text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-primary-red text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-md p-6;
+  }
+}

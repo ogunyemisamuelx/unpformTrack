@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  name           String
+  password       String
+  isAdmin        Boolean  @default(false)
+  isActive       Boolean  @default(true) // For archiving departed staff
+  avatarUrl      String?  // Profile picture URL
+  avatarCloudinaryId String? // Cloudinary ID for avatar
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  documentPairs  DocumentPair[]
+
+  @@map("users")
+}
+
+model DocumentPair {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Front image
+  frontCloudinaryId String   // Cloudinary public ID for front
+  frontImageUrl     String   // Full Cloudinary URL for front
+  
+  // Back image
+  backCloudinaryId  String   // Cloudinary public ID for back
+  backImageUrl      String   // Full Cloudinary URL for back
+  
+  uploadedAt        DateTime @default(now())
+
+  @@map("document_pairs")
+  @@index([userId])
+  @@index([uploadedAt])
+}
