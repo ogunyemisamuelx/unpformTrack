@@ -17,6 +17,7 @@ export default function ImageUploadModal({ onClose, onSuccess }: Props) {
   const [uploadMethod, setUploadMethod] = useState<'camera' | 'file' | null>(null)
   const [frontImage, setFrontImage] = useState<CapturedImage | null>(null)
   const [backImage, setBackImage] = useState<CapturedImage | null>(null)
+  const [reference, setReference] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -56,6 +57,8 @@ export default function ImageUploadModal({ onClose, onSuccess }: Props) {
             setFrontImage({ blob, preview })
             stopCamera()
             setStep('back')
+            // Restart camera for back side capture
+            setTimeout(startCamera, 100)
           } else if (step === 'back') {
             setBackImage({ blob, preview })
             stopCamera()
@@ -106,6 +109,7 @@ export default function ImageUploadModal({ onClose, onSuccess }: Props) {
       const formData = new FormData()
       formData.append('frontImage', frontImage.blob)
       formData.append('backImage', backImage.blob)
+      formData.append('reference', reference.trim())
 
       const response = await fetch('/api/upload-pair', {
         method: 'POST',
@@ -214,12 +218,12 @@ export default function ImageUploadModal({ onClose, onSuccess }: Props) {
             </div>
           )}
 
-          {/* Camera View */}
-          {(step === 'front' || step === 'back') && uploadMethod === 'camera' && !frontImage && !backImage && (
+          {/* Camera View - Front */}
+          {step === 'front' && uploadMethod === 'camera' && !frontImage && (
             <div>
               <div className="mb-3 sm:mb-4 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <p className="text-blue-800 font-semibold text-sm sm:text-base">
-                  {step === 'front' ? '📄 Capture FRONT side' : '📄 Capture BACK side'}
+                  📄 Capture FRONT side
                 </p>
               </div>
               <video
@@ -230,7 +234,28 @@ export default function ImageUploadModal({ onClose, onSuccess }: Props) {
               />
               <canvas ref={canvasRef} className="hidden" />
               <button onClick={capturePhoto} className="w-full btn-primary text-sm sm:text-base py-3">
-                Capture {step === 'front' ? 'Front' : 'Back'}
+                Capture Front
+              </button>
+            </div>
+          )}
+
+          {/* Camera View - Back */}
+          {step === 'back' && uploadMethod === 'camera' && !backImage && (
+            <div>
+              <div className="mb-3 sm:mb-4 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-red-800 font-semibold text-sm sm:text-base">
+                  📄 Capture BACK side
+                </p>
+              </div>
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                className="w-full rounded-lg mb-3 sm:mb-4"
+              />
+              <canvas ref={canvasRef} className="hidden" />
+              <button onClick={capturePhoto} className="w-full btn-primary text-sm sm:text-base py-3">
+                Capture Back
               </button>
             </div>
           )}
@@ -267,6 +292,25 @@ export default function ImageUploadModal({ onClose, onSuccess }: Props) {
           {/* Review Both Images */}
           {step === 'review' && frontImage && backImage && (
             <div className="space-y-3 sm:space-y-4">
+              {/* Reference/Note Input */}
+              <div>
+                <label htmlFor="reference" className="block text-sm font-medium text-gray-700 mb-2">
+                  Customer Name or Reference <span className="text-gray-400">(Optional)</span>
+                </label>
+                <input
+                  id="reference"
+                  type="text"
+                  value={reference}
+                  onChange={(e) => setReference(e.target.value)}
+                  placeholder="e.g., John Doe, PKG-12345, USA Shipment"
+                  className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
+                  maxLength={100}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Add a note to easily find this document later
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-2 sm:gap-4">
                 {/* Front Preview */}
                 <div className="space-y-1 sm:space-y-2">

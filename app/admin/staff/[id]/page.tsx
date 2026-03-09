@@ -21,8 +21,22 @@ export default async function StaffProfilePage({ params }: { params: { id: strin
       id: params.id,
       isAdmin: false, // Ensure we're only viewing staff, not other admins
     },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      avatarUrl: true,
+      coverPhotoUrl: true,
+      isActive: true,
+      createdAt: true,
       documentPairs: {
+        select: {
+          id: true,
+          frontImageUrl: true,
+          backImageUrl: true,
+          reference: true,
+          uploadedAt: true,
+        },
         orderBy: { uploadedAt: 'desc' },
       },
     },

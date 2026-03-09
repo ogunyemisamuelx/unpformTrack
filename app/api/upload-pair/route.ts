@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const frontImage = formData.get('frontImage') as File
     const backImage = formData.get('backImage') as File
+    const reference = formData.get('reference') as string
 
     if (!frontImage || !backImage) {
       return NextResponse.json({ error: 'Both front and back images are required' }, { status: 400 })
@@ -32,6 +33,7 @@ export async function POST(request: NextRequest) {
         frontImageUrl: frontUpload.imageUrl,
         backCloudinaryId: backUpload.cloudinaryId,
         backImageUrl: backUpload.imageUrl,
+        reference: reference && reference.trim() !== '' ? reference.trim() : null,
       },
     })
 

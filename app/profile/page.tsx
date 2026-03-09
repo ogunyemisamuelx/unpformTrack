@@ -14,7 +14,12 @@ export default async function ProfilePage() {
   // Fetch user with their document pairs
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    include: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      avatarUrl: true,
+      coverPhotoUrl: true,
       documentPairs: {
         orderBy: { uploadedAt: 'desc' },
       },
